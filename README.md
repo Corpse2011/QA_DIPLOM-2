@@ -3,10 +3,10 @@
 Дипломный проект представляет собой автоматизацию тестирования комплексного сервиса, взаимодействующего с СУБД и API Банка.
 
 ## Документы
-* [Задание](https://github.com/Corpse2011/QA_DIPLOM/blob/master/docs/Zadanie.md)
-* [План автоматизации](https://github.com/Corpse2011/QA_DIPLOM/blob/master/docs/Plan.md)
-* [Отчет по итогам тестирования](https://github.com/Corpse2011/QA_DIPLOM/blob/master/docs/Report.md)
-* [Отчет по итогам автоматизированного тестирования](https://github.com/Corpse2011/QA_DIPLOM/blob/master/docs/Summary.md)
+* [Задание](https://github.com/Corpse2011/QA_DIPLOM-2/blob/main/docs/Zadanie.md)
+* [План автоматизации](https://github.com/Corpse2011/QA_DIPLOM-2/blob/main/docs/Plan.md)
+* [Отчет по итогам тестирования](https://github.com/Corpse2011/QA_DIPLOM-2/blob/main/docs/Report.md)
+* [Отчет по итогам автоматизированного тестирования](https://github.com/Corpse2011/QA_DIPLOM-2/blob/main/docs/Summary.md)
 
 Дипломный проект представляет собой автоматизацию тестирования комплексного сервиса, взаимодействующего с СУБД и API Банка.
 

@@ -9,13 +9,13 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class Payment {
-    private SelenideElement inputNumberCard = $x("//input[@placeholder=\"0000 0000 0000 0000\"]");
-    private SelenideElement inputMonth = $x("//input[@placeholder=\"08\"]");
-    private SelenideElement inputYear = $x("//input[@placeholder=\"22\"]");
-    private SelenideElement inputOwner = $x("//*[@id=\"root\"]/div/form/fieldset/div[3]/span/span[1]/span/span/span[2]/input");
-    private SelenideElement inputCVC = $x("//input[@placeholder=\"999\"]");
+    private SelenideElement cardNumber = $x("//input[@placeholder=\"0000 0000 0000 0000\"]");
+    private SelenideElement month = $x("//input[@placeholder=\"08\"]");
+    private SelenideElement year = $x("//input[@placeholder=\"22\"]");
+    private SelenideElement owner = $x("//*[@id=\"root\"]/div/form/fieldset/div[3]/span/span[1]/span/span/span[2]/input");
+    private SelenideElement cvc = $x("//input[@placeholder=\"999\"]");
     private SelenideElement badge = $x("//button[@role=\"button\"]//*[text()=\"Продолжить\"]");
-    private SelenideElement errNumberCard = $x("//*[@id=\"root\"]/div/form/fieldset/div[1]/span/span/span[3]");
+    private SelenideElement errCardNumber = $x("//*[@id=\"root\"]/div/form/fieldset/div[1]/span/span/span[3]");
     private SelenideElement errMonth = $x("//*[@id=\"root\"]/div/form/fieldset/div[2]/span/span[1]/span/span/span[3]");
     private SelenideElement errYear = $x("//*[@id=\"root\"]/div/form/fieldset/div[2]/span/span[2]/span/span/span[3]");
     private SelenideElement errOwner = $x("//*[@id=\"root\"]/div/form/fieldset/div[3]/span/span[1]/span/span/span[3]");
@@ -27,17 +27,17 @@ public class Payment {
     private SelenideElement reportDeclined = $x("//*[@id=\"root\"]/div/div[3]/div[3]");
     private SelenideElement snapCloseDeclined = $x("//*[@id=\"root\"]/div/div[3]/button");
 
-    public void inputAllInfo(int numberCard, String month, String year, String ownerName, String cvc) {
-        inputNumberCard.val(DataHelper.numberCards(numberCard));
-        inputMonth.val(String.valueOf(month));
-        inputYear.val(String.valueOf(year));
-        inputOwner.val(ownerName);
-        inputCVC.val(String.valueOf(cvc));
+    public void checkFullCardInfo(int numberCard, String month, String year, String ownerName, String cvc) {
+        cardNumber.val(DataHelper.numberCards(numberCard));
+        this.month.val(String.valueOf(month));
+        this.year.val(String.valueOf(year));
+        owner.val(ownerName);
+        this.cvc.val(String.valueOf(cvc));
         badge.click();
     }
 
-    public void sendTrue() {
-        errNumberCard.should(hidden);
+    public void checkAcceptedCardData() {
+        errCardNumber.should(hidden);
         errMonth.should(hidden);
         errYear.should(hidden);
         errOwner.should(hidden);
@@ -48,8 +48,8 @@ public class Payment {
         snapCloseReportApproved.click();
     }
 
-    public void sendFalse() {
-        errNumberCard.should(hidden);
+    public void checkDeclinedCardData() {
+        errCardNumber.should(hidden);
         errMonth.should(hidden);
         errYear.should(hidden);
         errOwner.should(hidden);
@@ -60,17 +60,17 @@ public class Payment {
         snapCloseDeclined.click();
     }
 
-    public void emptyField() {
+    public void checkAllFormsEmpty() {
         badge.click();
-        errNumberCard.should(visible);
+        errCardNumber.should(visible);
         errMonth.should(visible);
         errYear.should(visible);
         errOwner.should(visible);
         errCVC.should(visible);
     }
 
-    public void wrongMonth() {
-        errNumberCard.should(hidden);
+    public void checkWrongMonthField() {
+        errCardNumber.should(hidden);
         errMonth.should(visible);
         errMonth.should(text("Неверно указан срок действия карты"));
         errYear.should(hidden);
@@ -78,8 +78,8 @@ public class Payment {
         errCVC.should(hidden);
     }
 
-    public void wrongYear() {
-        errNumberCard.should(hidden);
+    public void checkWrongYearField() {
+        errCardNumber.should(hidden);
         errMonth.should(hidden);
         errYear.should(visible);
         errYear.should(text("Истёк срок действия карты"));
@@ -87,8 +87,8 @@ public class Payment {
         errCVC.should(hidden);
     }
 
-    public void emptyMonth() {
-        errNumberCard.should(hidden);
+    public void checkEmptyMonthField() {
+        errCardNumber.should(hidden);
         errMonth.should(visible);
         errMonth.should(text("Неверный формат"));
         errYear.should(hidden);
@@ -96,8 +96,8 @@ public class Payment {
         errCVC.should(hidden);
     }
 
-    public void emptyYear() {
-        errNumberCard.should(hidden);
+    public void checkEmptyYearField() {
+        errCardNumber.should(hidden);
         errMonth.should(hidden);
         errYear.should(visible);
         errYear.should(text("Неверный формат"));
@@ -105,8 +105,8 @@ public class Payment {
         errCVC.should(hidden);
     }
 
-    public void emptyOwner() {
-        errNumberCard.should(hidden);
+    public void checkEmptyOwnerField() {
+        errCardNumber.should(hidden);
         errMonth.should(hidden);
         errYear.should(hidden);
         errOwner.should(visible);
@@ -114,8 +114,8 @@ public class Payment {
         errCVC.should(hidden);
     }
 
-    public void emptyCVC() {
-        errNumberCard.should(hidden);
+    public void checkEmptyCVCField() {
+        errCardNumber.should(hidden);
         errMonth.should(hidden);
         errYear.should(hidden);
         errOwner.should(hidden);
@@ -123,17 +123,17 @@ public class Payment {
         errCVC.should(text("Неверный формат"));
     }
 
-    public void wrongNumberCard() {
-        errNumberCard.should(visible);
-        errNumberCard.should(text("Неверный формат"));
+    public void checkWrongNumberCardField() {
+        errCardNumber.should(visible);
+        errCardNumber.should(text("Неверный формат"));
         errMonth.should(hidden);
         errYear.should(hidden);
         errOwner.should(hidden);
         errCVC.should(hidden);
     }
 
-    public void wrongOwner() {
-        errNumberCard.should(hidden);
+    public void checkWrongOwnerField() {
+        errCardNumber.should(hidden);
         errMonth.should(hidden);
         errYear.should(hidden);
         errOwner.should(visible);

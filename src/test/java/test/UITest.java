@@ -1,7 +1,7 @@
 package test;
 
 import com.codeborne.selenide.logevents.SelenideLogger;
-import data.first;
+import data.CardModel;
 import helper.DataHelper;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
@@ -14,11 +14,11 @@ import static helper.DataHelper.validInfo;
 
 public class UITest {
 
-    first data;
+    CardModel data;
     Home home;
 
     @BeforeEach
-    public void connect() {
+    public void prepare() {
         open("http://localhost:8080/");
         data = validInfo();
         home = new Home();
@@ -36,277 +36,247 @@ public class UITest {
 
     @Test
     @DisplayName("Отправка валидной формы")//1
-    public void inputValidInfo() {
-        home.payment();
-        Payment payment = new Payment();
-        payment.inputAllInfo(0, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
-        payment.sendTrue();
+    public void testValidInfo() {
+        Payment payment = home.payment();
+        payment.checkFullCardInfo(0, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
+        payment.checkAcceptedCardData();
     }
 
     @Test
     @DisplayName("Отправка формы DECLINED")//2
-    public void inputDeclinedCard() {
-        home.payment();
-        Payment payment = new Payment();
-        payment.inputAllInfo(1, data.getMonth(),data.getYear(), data.getName(), data.getCvc());
-        payment.sendFalse();
+    public void testDeclinedCard() {
+        Payment payment = home.payment();
+        payment.checkFullCardInfo(1, data.getMonth(),data.getYear(), data.getName(), data.getCvc());
+        payment.checkDeclinedCardData();
     }
 
     @Test
     @DisplayName("Отправка пустой страницы")//3
-    public void emptyInfo() {
-        home.payment();
-        Payment payment = new Payment();
-        payment.emptyField();
+    public void testEmptyInfo() {
+        Payment payment = home.payment();
+        payment.checkAllFormsEmpty();
     }
 
     @Test
     @DisplayName("Отправка формы с пустым месяцем")//4
-    public void emptyMonth() {
-        home.payment();
-        Payment payment = new Payment();
-        payment.inputAllInfo(0, null, data.getYear(), data.getName(), data.getCvc());
-        payment.emptyMonth();
+    public void testEmptyMonth() {
+        Payment payment = home.payment();
+        payment.checkFullCardInfo(0, null, data.getYear(), data.getName(), data.getCvc());
+        payment.checkEmptyMonthField();
     }
 
     @Test
     @DisplayName("Отправка формы с пустым годом")//5
-    public void emptyYear() {
-        home.payment();
-        Payment payment = new Payment();
-        payment.inputAllInfo(0, data.getMonth(), null, data.getName(), data.getCvc());
-        payment.emptyYear();
+    public void testEmptyYear() {
+        Payment payment = home.payment();
+        payment.checkFullCardInfo(0, data.getMonth(), null, data.getName(), data.getCvc());
+        payment.checkEmptyYearField();
     }
 
     @Test
     @DisplayName("Отправка формы с пустым именем")//6
-    public void emptyOwner() {
-        home.payment();
-        Payment payment = new Payment();
-        payment.inputAllInfo(0, data.getMonth(), data.getYear(), null, data.getCvc());
-        payment.emptyOwner();
+    public void testEmptyOwner() {
+        Payment payment = home.payment();
+        payment.checkFullCardInfo(0, data.getMonth(), data.getYear(), null, data.getCvc());
+        payment.checkEmptyOwnerField();
     }
 
     @Test
     @DisplayName("Отправка формы с пустым CVC")//7
-    public void emptyCVC() {
-        home.payment();
-        Payment payment = new Payment();
-        payment.inputAllInfo(0, data.getMonth(), data.getYear(), data.getName(), null);
-        payment.emptyCVC();
+    public void testEmptyCVC() {
+        Payment payment = home.payment();
+        payment.checkFullCardInfo(0, data.getMonth(), data.getYear(), data.getName(), null);
+        payment.checkEmptyCVCField();
     }
 
     @Test
     @DisplayName("Отправка формы с пустым номером карты")//8
-    public void emptyNumberCard() {
-        home.payment();
-        Payment payment = new Payment();
-        payment.inputAllInfo(3, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
-        payment.wrongNumberCard();
+    public void testEmptyNumberCard() {
+        Payment payment = home.payment();
+        payment.checkFullCardInfo(3, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
+        payment.checkWrongNumberCardField();
     }
 
     @Test
     @DisplayName("Форма с коротким номером карты")//9
-    public void shortCardNumber() {
-        home.payment();
-        Payment payment = new Payment();
-        payment.inputAllInfo(2, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
-        payment.wrongNumberCard();
+    public void testShortCardNumber() {
+        Payment payment = home.payment();
+        payment.checkFullCardInfo(2, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
+        payment.checkWrongNumberCardField();
     }
 
     @Test
     @DisplayName("Отправка формы с неправильным месяцем")//10
-    public void wrongMonth() {
-        home.payment();
-        Payment payment = new Payment();
-        payment.inputAllInfo(0, DataHelper.nonValidMonth(),data.getYear(), data.getName(), data.getCvc());
-        payment.wrongMonth();
+    public void testWrongMonth() {
+        Payment payment = home.payment();
+        payment.checkFullCardInfo(0, DataHelper.getMonth(-2), data.getYear(), data.getName(), data.getCvc());
+        payment.checkWrongMonthField();
     }
 
     @Test
     @DisplayName("Отправка формы с неверным годом")//11
-    public void wrongYear() {
-        home.payment();
-        Payment payment = new Payment();
-        payment.inputAllInfo(0, data.getMonth(), DataHelper.notValidYear(), data.getName(), data.getCvc());
-        payment.wrongYear();
+    public void testWrongYear() {
+        Payment payment = home.payment();
+        payment.checkFullCardInfo(0, data.getMonth(), DataHelper.getYear(-1), data.getName(), data.getCvc());
+        payment.checkWrongYearField();
     }
 
     @Test
     @DisplayName("Отправка имени с тире")//12
-    public void nameWithDash() {
-        home.payment();
+    public void testNameWithDash() {
+        Payment payment = home.payment();
         String name = "Ivanov-Ivanov Ivan";
-        Payment payment = new Payment();
-        payment.inputAllInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
-        payment.sendTrue();
+        payment.checkFullCardInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
+        payment.checkAcceptedCardData();
     }
 
     @Test
     @DisplayName("Отправка имени на кирилице")//13
-    public void nameCyrillik() {
-        home.payment();
+    public void testCyrillikSymbolsInName() {
+        Payment payment = home.payment();
         String name = "Иванов Иван";
-        Payment payment = new Payment();
-        payment.inputAllInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
-        payment.wrongOwner();
+        payment.checkFullCardInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
+        payment.checkWrongOwnerField();
     }
 
     @Test
     @DisplayName("Отправка имени с цифрами")//14
-    public void nameWithNumber() {
-        home.payment();
+    public void testNameWithNumbers() {
+        Payment payment = home.payment();
         String name = "Ivanov123";
-        Payment payment = new Payment();
-        payment.inputAllInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
-        payment.wrongOwner();
+        payment.checkFullCardInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
+        payment.checkWrongOwnerField();
     }
 
     @Test
     @DisplayName("Отправка имени с спец.символами")//29
-    public void nameWithKryak() {
-        home.payment();
+    public void testNameWithSpecSymbols() {
+        Payment payment = home.payment();
         String name = "@#$%^&*()~-+/*?><|";
-        Payment payment = new Payment();
-        payment.inputAllInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
-        payment.wrongOwner();
+        payment.checkFullCardInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
+        payment.checkWrongOwnerField();
     }
 
     @Test
     @DisplayName("Отправка валидной формы в Кредит")//15
-    public void inputValidInfoCredit() {
-        home.creditPayment();
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(0, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
-        creditRequest.sendTrue();
+    public void testValidCreditData() {
+        CreditPayment creditRequest = home.creditPayment();
+        creditRequest.checkFullCardInfo(0, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
+        creditRequest.checkAcceptedCardData();
     }
 
     @Test
     @DisplayName("Отправка формы DECLINED Кредит")//16
-    public void inputDeclinedCardCredit() {
-        home.creditPayment();
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(1, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
-        creditRequest.sendFalse();
+    public void testInvalidCreditData() {
+        CreditPayment creditRequest = home.creditPayment();
+        creditRequest.checkFullCardInfo(1, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
+        creditRequest.checkDeclinedCardData();
     }
 
     @Test
     @DisplayName("Отправка с пустым полем Кредит")//17
-    public void emptyInfoCredit() {
-        home.creditPayment();
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.emptyField();
+    public void testEmptyCreditData() {
+        CreditPayment creditRequest = home.creditPayment();
+        creditRequest.checkAllFormsEmpty();
     }
 
     @Test
     @DisplayName("Отправка формы с пустым месяцем Кредит")//18
-    public void emptyMonthCredit() {
-        home.creditPayment();
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(0, null, data.getYear(), data.getName(), data.getCvc());
-        creditRequest.emptyMonth();
+    public void testEmptyMonthFieldInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
+        creditRequest.checkFullCardInfo(0, null, data.getYear(), data.getName(), data.getCvc());
+        creditRequest.checkEmptyMonthField();
     }
 
     @Test
     @DisplayName("Отправка формы с пустым годом Кредит")//19
-    public void emptyYearCredit() {
-        home.creditPayment();
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(0, data.getMonth(), null, data.getName(), data.getCvc());
-        creditRequest.emptyYear();
+    public void testEmptyYearFieldInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
+        creditRequest.checkFullCardInfo(0, data.getMonth(), null, data.getName(), data.getCvc());
+        creditRequest.checkEmptyYearField();
     }
 
     @Test
     @DisplayName("Отправка формы с пустым именем Кредит")//20
-    public void emptyOwnerCredit() {
-        home.creditPayment();
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(0, data.getMonth(), data.getYear(), null, data.getCvc());
-        creditRequest.emptyOwner();
+    public void testEmptyOwnerFieldInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
+        creditRequest.checkFullCardInfo(0, data.getMonth(), data.getYear(), null, data.getCvc());
+        creditRequest.checkEmptyOwnerField();
     }
 
     @Test
     @DisplayName("Отправка формы с пустым CVC Кредит")//21
-    public void emptyCVCCredit() {
-        home.creditPayment();
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(0, data.getMonth(), data.getYear(), data.getName(), null);
-        creditRequest.emptyCVC();
+    public void testEmptyCVCFieldInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
+        creditRequest.checkFullCardInfo(0, data.getMonth(), data.getYear(), data.getName(), null);
+        creditRequest.checkEmptyCVCField();
     }
 
     @Test
     @DisplayName("Отправка формы с пустым номером Кредит")//22
-    public void emptyNumberCardCredit() {
-        home.creditPayment();
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(3, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
-        creditRequest.wrongNumberCard();
+    public void testEmptyCardNumberFieldInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
+        creditRequest.checkFullCardInfo(3, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
+        creditRequest.checkWrongNumberCardField();
     }
 
     @Test
     @DisplayName("Отправка формы с коротким номером Кредит")//23
-    public void shortCardNumberCredit() {
-        home.creditPayment();
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(2, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
-        creditRequest.wrongNumberCard();
+    public void testShortCardNumberInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
+        creditRequest.checkFullCardInfo(2, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
+        creditRequest.checkWrongNumberCardField();
     }
 
     @Test
     @DisplayName("Отправка формы с неправильным месяцем Кредит")//24
-    public void wrongMonthCredit() {
-        home.creditPayment();
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(0, DataHelper.nonValidMonth(), data.getYear(), data.getName(), data.getCvc());
-        creditRequest.wrongMonth();
+    public void testWrongMonthInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
+        creditRequest.checkFullCardInfo(0, DataHelper.getMonth(-2), data.getYear(), data.getName(), data.getCvc());
+        creditRequest.checkInvalidMonthField();
     }
 
     @Test
     @DisplayName("Отправка формы с неправильным годом Кредит")//25
-    public void wrongYearCredit() {
-        home.creditPayment();
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(0, data.getMonth(), DataHelper.notValidYear(), data.getName(), data.getCvc());
-        creditRequest.wrongYear();
+    public void testWrongYearInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
+        creditRequest.checkFullCardInfo(0, data.getMonth(), DataHelper.getYear(-1), data.getName(), data.getCvc());
+        creditRequest.checkInvalidYearField();
     }
 
     @Test
     @DisplayName("Отправка имени с тире2 Кредит")//26
-    public void nameWithDashCredit() {
-        home.creditPayment();
+    public void testNameWithDashInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
         String name = "Ivanov-Ivanov Kirill";
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
-        creditRequest.sendTrue();
+        creditRequest.checkFullCardInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
+        creditRequest.checkAcceptedCardData();
     }
 
     @Test
     @DisplayName("Отправка имени на кирилице Кредит")//27
-    public void nameCyrillikCredit() {
-        home.creditPayment();
+    public void testCyrillikNameInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
         String name = "Иванов Иван";
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
-        creditRequest.wrongOwner();
+        creditRequest.checkFullCardInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
+        creditRequest.checkWrongOwnerField();
     }
 
     @Test
     @DisplayName("Отправка имени с цифрами Кредит")//28
-    public void nameWithNumberCredit() {
-        home.creditPayment();
+    public void testNameWithNumberInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
         String name = "Ivanov123";
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
-        creditRequest.wrongOwner();
+        creditRequest.checkFullCardInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
+        creditRequest.checkWrongOwnerField();
     }
 
     @Test
     @DisplayName("Отправка имени с спец.символами Кредит")//30
-    public void nameWithKryakCredit() {
-        home.creditPayment();
+    public void testNameWithSpecSymbolsInCredit() {
+        CreditPayment creditRequest = home.creditPayment();
         String name = "@#$%^&*()~-+/*?><|";
-        CreditPayment creditRequest = new CreditPayment();
-        creditRequest.inputAllInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
-        creditRequest.wrongOwner();
+        creditRequest.checkFullCardInfo(0, data.getMonth(), data.getYear(), name, data.getCvc());
+        creditRequest.checkWrongOwnerField();
     }
 }

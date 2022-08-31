@@ -4,7 +4,7 @@ import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class Home {
+public class Home {//кнопки выбора
 
     private SelenideElement payment = $x("//button[@role =\"button\"]//*[text() = \"Купить\"]");
     private SelenideElement creditPayment = $x("//button[@role =\"button\"]//*[text() = \"Купить в кредит\"]");

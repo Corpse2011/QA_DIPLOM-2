@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Helper {
+public class DBHelper {
     private static QueryRunner request;
     private static Connection connection;
     private static final String url = System.getProperty("urlDB");
@@ -51,29 +51,29 @@ public class Helper {
     }
 
     public static void assertStatusPaymentApproved() {
-        String id = Helper.getIdPayment();
-        String actual = Helper.getPaymentStatus(id);
+        String id = DBHelper.getIdPayment();
+        String actual = DBHelper.getPaymentStatus(id);
         String expected = "APPROVED";
         assertEquals(expected, actual);
     }
 
-    public void assertStatusPaymentDeclined() {
-        String id = Helper.getIdPayment();
-        String actual = Helper.getPaymentStatus(id);
+    public static void assertStatusPaymentDeclined() {
+        String id = DBHelper.getIdPayment();
+        String actual = DBHelper.getPaymentStatus(id);
         String expected = "DECLINED";
         assertEquals(expected, actual);
     }
 
-    public void assertStatusCreditApproved() {
-        String id = Helper.getIdCreditPayment();
-        String actual = Helper.getCreditPaymentStatus(id);
+    public static void assertStatusCreditApproved() {
+        String id = DBHelper.getIdCreditPayment();
+        String actual = DBHelper.getCreditPaymentStatus(id);
         String expected = "APPROVED";
         assertEquals(expected, actual);
     }
 
-    public void assertStatusCreditDeclined() {
-        String id = Helper.getIdCreditPayment();
-        String actual = Helper.getCreditPaymentStatus(id);
+    public static void assertStatusCreditDeclined() {
+        String id = DBHelper.getIdCreditPayment();
+        String actual = DBHelper.getCreditPaymentStatus(id);
         String expected = "DECLINED";
         assertEquals(expected, actual);
     }

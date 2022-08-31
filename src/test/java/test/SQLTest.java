@@ -1,8 +1,8 @@
 package test;
 
 import com.codeborne.selenide.logevents.SelenideLogger;
-import data.first;
-import helper.Helper;
+import data.CardModel;
+import helper.DBHelper;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
 import page.Home;
@@ -12,7 +12,7 @@ import static com.codeborne.selenide.Selenide.open;
 import static helper.DataHelper.validInfo;
 
 public class SQLTest {
-    first data;
+    CardModel data;
     Home home;
 
     @BeforeEach
@@ -34,45 +34,41 @@ public class SQLTest {
 
     @Test
     @DisplayName("APPROVED")
-    public void paymentApprovedStatus() {
+    public void checkPaymentApprovedStatus() {
         home.payment();
         Payment payment = new Payment();
-        payment.inputAllInfo(0, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
-        payment.sendTrue();
-        Helper Helper = new Helper();
-        Helper.assertStatusPaymentApproved();
+        payment.checkFullCardInfo(0, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
+        payment.checkAcceptedCardData();
+        DBHelper.assertStatusPaymentApproved();
     }
 
     @Test
     @DisplayName("DECLINED")
-    public void paymentDeclinedStatus() {
+    public void checkPaymentDeclinedStatus() {
         home.payment();
         Payment payment = new Payment();
-        payment.inputAllInfo(1, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
-        payment.sendTrue();
-        Helper Helper = new Helper();
-        Helper.assertStatusPaymentDeclined();
+        payment.checkFullCardInfo(1, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
+        payment.checkAcceptedCardData();
+        DBHelper.assertStatusPaymentDeclined();
     }
 
     @Test
     @DisplayName("APPROVED оплата в кредит")
-    public void creditPaymentApprovedStatus() {
+    public void checkCreditPaymentApprovedStatus() {
         home.payment();
         Payment payment = new Payment();
-        payment.inputAllInfo(0, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
-        payment.sendTrue();
-        Helper Helper = new Helper();
-        Helper.assertStatusCreditApproved();
+        payment.checkFullCardInfo(0, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
+        payment.checkAcceptedCardData();
+        DBHelper.assertStatusCreditApproved();
     }
 
     @Test
     @DisplayName("DECLINED оплата в кредит")
-    public void creditPaymentDeclinedStatus() {
+    public void checkCreditPaymentDeclinedStatus() {
         home.payment();
         Payment payment = new Payment();
-        payment.inputAllInfo(1, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
-        payment.sendTrue();
-        Helper Helper = new Helper();
-        Helper.assertStatusCreditDeclined();
+        payment.checkFullCardInfo(1, data.getMonth(), data.getYear(), data.getName(), data.getCvc());
+        payment.checkAcceptedCardData();
+        DBHelper.assertStatusCreditDeclined();
     }
 }

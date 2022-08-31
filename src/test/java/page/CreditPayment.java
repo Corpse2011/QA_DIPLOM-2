@@ -8,7 +8,7 @@ import java.time.Duration;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$x;
 
-public class CreditPayment {
+public class CreditPayment { //магия
     private SelenideElement inputNumberCard = $x("//input[@placeholder=\"0000 0000 0000 0000\"]");
     private SelenideElement inputMonth = $x("//input[@placeholder=\"08\"]");
     private SelenideElement inputYear = $x("//input[@placeholder=\"22\"]");
@@ -27,7 +27,7 @@ public class CreditPayment {
     private SelenideElement reportDeclined = $x("//*[@id=\"root\"]/div/div[3]/div[3]");
     private SelenideElement snapCloseDeclined = $x("//*[@id=\"root\"]/div/div[3]/button");
 
-    public void inputAllInfo(int numberCard, String month, String year, String ownerName, String cvc) {
+    public void checkFullCardInfo(int numberCard, String month, String year, String ownerName, String cvc) {
         inputNumberCard.val(DataHelper.numberCards(numberCard));
         inputMonth.val(String.valueOf(month));
         inputYear.val(String.valueOf(year));
@@ -36,7 +36,7 @@ public class CreditPayment {
         badge.click();
     }
 
-    public void sendTrue() {
+    public void checkAcceptedCardData() {
         errNumberCard.should(hidden);
         errMonth.should(hidden);
         errYear.should(hidden);
@@ -48,7 +48,7 @@ public class CreditPayment {
         snapCloseReportApproved.click();
     }
 
-    public void sendFalse() {
+    public void checkDeclinedCardData() {
         errNumberCard.should(hidden);
         errMonth.should(hidden);
         errYear.should(hidden);
@@ -60,7 +60,7 @@ public class CreditPayment {
         snapCloseDeclined.click();
     }
 
-    public void emptyField() {
+    public void checkAllFormsEmpty() {
         badge.click();
         errNumberCard.should(visible);
         errMonth.should(visible);
@@ -69,7 +69,7 @@ public class CreditPayment {
         errCVC.should(visible);
     }
 
-    public void wrongMonth() {
+    public void checkInvalidMonthField() {
         errNumberCard.should(hidden);
         errMonth.should(visible);
         errMonth.should(text("Неверно указан срок действия карты"));
@@ -78,7 +78,7 @@ public class CreditPayment {
         errCVC.should(hidden);
     }
 
-    public void wrongYear() {
+    public void checkInvalidYearField() {
         errNumberCard.should(hidden);
         errMonth.should(hidden);
         errYear.should(visible);
@@ -87,7 +87,7 @@ public class CreditPayment {
         errCVC.should(hidden);
     }
 
-    public void emptyMonth() {
+    public void checkEmptyMonthField() {
         errNumberCard.should(hidden);
         errMonth.should(visible);
         errMonth.should(text("Неверный формат"));
@@ -96,7 +96,7 @@ public class CreditPayment {
         errCVC.should(hidden);
     }
 
-    public void emptyYear() {
+    public void checkEmptyYearField() {
         errNumberCard.should(hidden);
         errMonth.should(hidden);
         errYear.should(visible);
@@ -105,7 +105,7 @@ public class CreditPayment {
         errCVC.should(hidden);
     }
 
-    public void emptyOwner() {
+    public void checkEmptyOwnerField() {
         errNumberCard.should(hidden);
         errMonth.should(hidden);
         errYear.should(hidden);
@@ -114,7 +114,7 @@ public class CreditPayment {
         errCVC.should(hidden);
     }
 
-    public void emptyCVC() {
+    public void checkEmptyCVCField() {
         errNumberCard.should(hidden);
         errMonth.should(hidden);
         errYear.should(hidden);
@@ -123,7 +123,7 @@ public class CreditPayment {
         errCVC.should(text("Неверный формат"));
     }
 
-    public void wrongNumberCard() {
+    public void checkWrongNumberCardField() {
         errNumberCard.should(visible);
         errNumberCard.should(text("Неверный формат"));
         errMonth.should(hidden);
@@ -132,7 +132,7 @@ public class CreditPayment {
         errCVC.should(hidden);
     }
 
-    public void wrongOwner() {
+    public void checkWrongOwnerField() {
         errNumberCard.should(hidden);
         errMonth.should(hidden);
         errYear.should(hidden);

@@ -1,54 +1,30 @@
 package helper;
 
 import com.github.javafaker.Faker;
-import data.first;
+import data.CardModel;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class DataHelper {
     public static Faker faker = new Faker();
 
-    public static String validName() {
+    public static String getValidName() {
         return faker.name().fullName();
     }//1
 
-    public static String validMonth() {
-        int monthNow;
-        monthNow = LocalDate.now().getMonthValue();
-        if (monthNow < 10) {
-            NumberFormat f = new DecimalFormat("00");
-            String month2 = String.valueOf(f.format(monthNow));
-            return month2;
-        } else {
-            return String.valueOf(monthNow);
-        }
+    public static String getMonth(int shiftedMonth){
+        LocalDate date = LocalDate.now().plusMonths(shiftedMonth);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
+        return formatter.format(date);
     }
 
-    public static String nonValidMonth() {
-        LocalDate monthMinus;
-        monthMinus = LocalDate.now().minusMonths(2);
-        int month = monthMinus.getMonthValue();
-        if (month < 10) {
-            NumberFormat f = new DecimalFormat("00");
-            String month2 = String.valueOf(f.format(month));
-            return month2;
-        } else {
-            return String.valueOf(month);
-        }
-    }
-
-    public static String validYear() {
-        int year = LocalDate.now().getYear();
-        return String.valueOf(year % 100);
-    }
-
-    public static String notValidYear() {
-        int date = LocalDate.now().getYear();
-        int year;
-        year = date - 1;
-        return String.valueOf(year % 100);
+    public static String getYear(int shiftedYear){
+        LocalDate date = LocalDate.now().plusYears(shiftedYear);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YY");
+        return formatter.format(date);
     }
 
     public static String cvcCode() {
@@ -56,14 +32,13 @@ public class DataHelper {
     }
 
     public static String numberCards(int number) {
-        String card = first.numberCard[number];
-        return card;
+        return CardModel.numberCard[number];
     }
 
     private DataHelper() {
     }
 
-    public static first validInfo() {
-        return new first(validMonth(), validYear(), validName(), cvcCode());
+    public static CardModel validInfo() {
+        return new CardModel(getMonth(1), getYear(1), getValidName(), cvcCode());
     }
 }
